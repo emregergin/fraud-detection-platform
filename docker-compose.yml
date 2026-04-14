@@ -74,6 +74,24 @@ services:
     networks:
       - fraud-network
 
+  worker:
+    build:
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    container_name: fraud_worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - fraud-network
+
 networks:
   fraud-network:
     driver: bridge
