@@ -92,6 +92,24 @@ services:
     networks:
       - fraud-network
 
+  mcp-server:
+    build:
+      context: .
+      dockerfile: docker/mcp-server.Dockerfile
+    container_name: fraud_mcp_server
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - fraud-network
+    stdin_open: true
+    tty: true
+
 networks:
   fraud-network:
     driver: bridge
